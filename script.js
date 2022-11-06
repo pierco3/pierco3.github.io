@@ -36,11 +36,10 @@ async function get_user_jokes() {
     } 
     else {
 
-        jokes_col.setAttribute("style", "");
+        jokes_col.setAttribute("style", "margin-top: 20px;");
 
         if (id) {
-            console.log(id);
-            retrieved_jokes = await fetch(`https://cp-inpro-pyjokesapi.herokuapp.com/api/v1/jokes?language=${language}&category=${category}&id=${id}`)
+            retrieved_jokes = await fetch(`https://cp-inpro-pyjokesapi.herokuapp.com/api/v1/jokes?language=${language}&category=${category}&number=${number}&id=${id}`)
                 .then(response => response.json())
                 .catch(error => console.log(error));
             number = 1;
@@ -50,11 +49,23 @@ async function get_user_jokes() {
                 .catch(error => console.log(error));
         }
 
-        for (let j = 0; j < number; ++j) {
-            let retrieved_joke_div = document.createElement("div");
-            retrieved_joke_div.innerHTML = retrieved_jokes[j];
-            retrieved_joke_div.setAttribute("style", "margin-top: 20px;");
-            jokes_col.appendChild(retrieved_joke_div);
+        console.log(retrieved_jokes);
+
+        if (retrieved_jokes) {
+            for (let j = 0; j < number; ++j) {
+                let retrieved_joke_div = document.createElement("div");
+                retrieved_joke_div.innerHTML = retrieved_jokes[j]['text'];
+                retrieved_joke_div.setAttribute("style", "margin-top: 20px;");
+                jokes_col.appendChild(retrieved_joke_div);
+                console.log('huh');
+                }
+        } else {
+            let alert_div = document.createElement("div");
+            alert_div.setAttribute("id", "error-message");
+            alert_div.setAttribute("class", "alert alert-danger");
+            alert_div.setAttribute("role", "alert");
+            alert_div.innerHTML = "No Joke Was Able to Be Retrieved From Server";
+            jokes_col.appendChild(alert_div);
         }
     }
 
